@@ -118,14 +118,22 @@
 	// screen resolution: w-100, lt-480, lt-1024 ...
 	function screenSize() {
 		var w = window.outerWidth || html.clientWidth;
+		var h = window.outerHeight || html.clientHeight;
 		
 		// remove earlier widths
-		html.className = html.className.replace(/ (w|lt)-\d+/g, "");
+		html.className = html.className.replace(/ (w|lt|h|lth)-\d+/g, "");
 		
 		// add new ones
 		pushClass("w-" + Math.round(w / 100) * 100);
+		pushClass("h-" + Math.round(h / 100) * 100);
 		
-		each(conf.screens, function(width) {
+		each(conf.screens, function(size) {
+			var width = size;
+			if ('object' === typeof size) {
+				var height = size.y;
+				width = size.x;
+				if (h <= height) { pushClass("lth-" + height); }
+			}
 			if (w <= width) { pushClass("lt-" + width); } 
 		});
 		
